@@ -1,0 +1,31 @@
+- name: Install node_exporter
+  become: true
+  become_user: root
+  become_method: sudo
+  hosts: your_host_group
+  serial: 2
+
+  tasks:
+
+  - name: Create user prometheus
+    shell: useradd -M -r -s /bin/false prometheus 
+
+  - name: Copy binaries and set permissions
+    copy:
+      src: ./node_exporter-1.3.1.linux-amd64/node_exporter
+      dest: /usr/local/bin/node_exporter
+      owner: prometheus
+      group: prometheus
+      mode: '0751'
+
+  - name: Copy systemd startup script
+    copy:
+      src: ./node_exporter.service
+      dest: /lib/systemd/system/node_exporter.service
+
+  - name: Systemd enable and service startup
+    systemd:
+      daemon_reload: yes
+      name: node_exporter
+      enabled: yes
+      state: started
