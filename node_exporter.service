@@ -1,5 +1,5 @@
 [Unit]
-Description=Prometheus node exporter.
+Description=Prometheus node exporter service.
 Documentation=https://github.com/prometheus/node_exporter
 After=network.target
 
